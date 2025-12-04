@@ -1,35 +1,51 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: booli-targets
-  namespace: booli-targets
+  name: web
+  namespace: production
 spec:
   strategy:
-    type: Recreate
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
   selector:
     matchLabels:
-      app: booli-targets
+      app: web
   template:
     metadata:
       labels:
-        app: booli-targets
+        app: web
     spec:
-      serviceAccountName: booli-targets
       containers:
-      - name: booli-targets
+      - name: web
         env:
+        - name: ID
+          value: "1234"
         - name: MYSQL_HOST
-          values: "db"
+          value: mysql
         - name: MYSQL_ROOT_PASSWORD
-          values: rootpassword
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_ROOT_PASSWORD
         - name: MYSQL_DATABASE
-          values: "targets"
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_DATABASE
         - name: MYSQL_USER
-          value: "targets"
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_USER
         - name: MYSQL_PASSWORD
-          value: "passwords"
-        image: mattiashem/python:3.7
-        imagePullPolicy: Always
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_PASSWORD
+        image: web:latest
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
           protocol: TCP
@@ -37,7 +53,7 @@ spec:
           failureThreshold: 3
           httpGet:
             path: /ready
-            port: 8080
+            port: 80
             scheme: HTTP
           initialDelaySeconds: 5
           periodSeconds: 10
@@ -47,7 +63,7 @@ spec:
           failureThreshold: 3
           httpGet:
             path: /health
-            port: 8080
+            port: 80
             scheme: HTTP
           initialDelaySeconds: 5
           periodSeconds: 10
@@ -55,22 +71,39 @@ spec:
           timeoutSeconds: 1
         resources:
           requests:
-            cpu: 10m
-            memory: 4Mi
+            cpu: 1000m
+            memory: 2Gi
           limits:
-            cpu: 10m
-            memory: 4Mi
+            cpu: 2000m
+            memory: 4Gi
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: booli-targets
-  namespace: booli-targets
+  name: web
+  namespace: production
 spec:
-  ports:
-  - port: 8080
-    name: http
-    targetPort: 8080
-  selector:
-    app: webb
   type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: web
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web
+  namespace: production
+spec:
+  rules:
+  - host: target.praveenalexis.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: web
+            port:
+              number: 80

@@ -1,7 +1,7 @@
 FROM mattiashem/python:3.7
 
 #copy code
-COPY code/* /app/code/
+COPY code/ /app/code/
 WORKDIR /app/code
 
 #Install deps
