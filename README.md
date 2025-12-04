@@ -8,6 +8,7 @@
 
 ## For minikube deployment
 Step 1: Execute pipeline/minikube-init.sh
+
 Step 2: Execute pipeline/deploy.sh
 
 ## For help chart deployment
