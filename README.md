@@ -11,4 +11,9 @@ Step 1: Execute pipeline/minikube-init.sh
 
 Step 2: Execute pipeline/deploy.sh
 
-## For help chart deployment
+## For helm-chart deployment
+
+Step 1: Modify the helm/values.yaml
+
+Step 2: Excecute "helm install <deployment-name> helm"
+
