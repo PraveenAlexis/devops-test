@@ -2,7 +2,7 @@
 
 - Docker (Docker version 29.0.1)
 - Helm (Version:"v4.0.0)
-- minikube (version: v1.37.0)
+- Minikube with docker driver (version: v1.37.0)
 
 ## Deployment evidance are in assets directory ##
 
