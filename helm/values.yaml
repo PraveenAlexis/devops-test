@@ -1,0 +1,11 @@
+namespace: helm-production
+mysql: helm-mysql
+web: helm-web
+domain: helm.target.praveenalexis.com
+MinReplicas: 3
+MaxReplicas: 5
+
+mysqlRootPassword: rootpassword
+mysqlDatabase: targets
+mysqlUser: targets
+mysqlPassword: password

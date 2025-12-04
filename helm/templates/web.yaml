@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: production
+  name: {{ .Values.namespace }}
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: web
-  namespace: production
+  name: {{ .Values.web }}
+  namespace: {{ .Values.namespace }}
 spec:
   strategy:
     type: RollingUpdate
@@ -16,38 +16,38 @@ spec:
       maxSurge: 1
   selector:
     matchLabels:
-      app: web
+      app: {{ .Values.web }}
   template:
     metadata:
       labels:
-        app: web
+        app: {{ .Values.web }}
     spec:
       containers:
-      - name: web
+      - name: {{ .Values.web }}
         env:
         - name: ID
           value: "1234"
         - name: MYSQL_HOST
-          value: mysql
+          value: {{ .Values.mysql }}
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: mysql-secret
+              name: {{ .Values.mysql }}-secret
               key: MYSQL_ROOT_PASSWORD
         - name: MYSQL_DATABASE
           valueFrom:
             secretKeyRef:
-              name: mysql-secret
+              name: {{ .Values.mysql }}-secret
               key: MYSQL_DATABASE
         - name: MYSQL_USER
           valueFrom:
             secretKeyRef:
-              name: mysql-secret
+              name: {{ .Values.mysql }}-secret
               key: MYSQL_USER
         - name: MYSQL_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: mysql-secret
+              name: {{ .Values.mysql }}-secret
               key: MYSQL_PASSWORD
         image: web:latest
         imagePullPolicy: IfNotPresent
@@ -85,46 +85,46 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: web
-  namespace: production
+  name: {{ .Values.web }}
+  namespace: {{ .Values.namespace }}
 spec:
   type: ClusterIP
   ports:
   - port: 80
     targetPort: 80
   selector:
-    app: web
+    app: {{ .Values.web }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: web
-  namespace: production
+  name: {{ .Values.web }}
+  namespace: {{ .Values.namespace }}
 spec:
   rules:
-  - host: target.praveenalexis.com
+  - host: {{ .Values.domain }}
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: web
+            name: {{ .Values.web }}
             port:
               number: 80
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: web
-  namespace: production
+  name: {{ .Values.web }}
+  namespace: {{ .Values.namespace }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: web
-  minReplicas: 3
-  maxReplicas: 5
+    name: {{ .Values.web }}
+  minReplicas: {{ .Values.MinReplicas }}
+  maxReplicas: {{ .Values.MaxReplicas }}
   metrics:
   - type: Resource
     resource:
