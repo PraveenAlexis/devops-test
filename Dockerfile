@@ -14,6 +14,8 @@ RUN apt update && apt-get install -y curl openssh-server
 #deps 
 RUN apt update && apt-get install -y default-jre
 
+RUN chmod +x ./entrypoint.sh
+
 EXPOSE 80
 
 # Start server
