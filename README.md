@@ -22,10 +22,10 @@ Step 2: Execute "kubectl apply -f .\manifest --recursive"
 
 Step 1: Modify the helm/values.yaml
 
-Step 2: Excecute "helm install '<deployment-name>' helm"
+Step 2: Excecute "helm install [deployment-name] helm"
 
 ## To Destroy Everything
 
 Step 1: Execute "kubectl delete -f .\manifest --recursive"
 
-Step 2: Execute "helm uninstall '<deployment-name>'"
+Step 2: Execute "helm uninstall [deployment-name]"
