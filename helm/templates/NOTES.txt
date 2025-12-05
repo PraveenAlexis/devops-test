@@ -1,0 +1,3 @@
+Make sure "minikube tunnel" is running to access the frontend using the domain {{ .Values.domain }}
+domain should be added to the localhost file with the following
+"127.0.0.1     {{ .Values.domain }}"
