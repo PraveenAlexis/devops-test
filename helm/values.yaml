@@ -1,11 +1,60 @@
+## Helm Chart Values File
 namespace: helm-production
 mysql: helm-mysql
 web: helm-web
 domain: helm.target.praveenalexis.com
-MinReplicas: 3
-MaxReplicas: 5
 
+## MySQL Secret Settings
 mysqlRootPassword: rootpassword
 mysqlDatabase: targets
 mysqlUser: targets
 mysqlPassword: password
+
+## Web Deployment Settings
+maxUnavailable: 1
+maxSurge: 1
+
+## HPA Settings
+minReplicas: 3
+maxReplicas: 5
+cpuUtilization: 75
+memoryUtilization: 75
+
+## Web Service Ports
+webExternalPort: 80
+webInternalPort: 80
+webContainerPort: 80
+webIngressPort: 80
+
+## Resource Requests for Web Deployment
+webCpuRequest: 500m
+webMemoryRequest: 1Gi
+webCpuLimit: 2000m
+webMemoryLimit: 6Gi
+
+## Web Image Settings
+webImage: web
+webImageTag: latest
+
+## Resource Requests for MySQL Deployment
+mysqlCpuRequest: 500m
+mysqlMemoryRequest: 1Gi
+mysqlCpuLimit: 2000m
+mysqlMemoryLimit: 6Gi
+
+## MySQL Service Ports
+mysqlExternalPort: 3306
+mysqlInternalPort: 3306
+mysqlContainerPort: 3306
+
+## MySQL Storage
+mysqlStorage: 10Gi
+
+## MySQL Image Settings
+mysqlImage: mysql
+mysqlImageTag: 8.4.7
+
+
+
+
+

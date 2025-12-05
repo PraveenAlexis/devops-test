@@ -12,6 +12,5 @@ minikube image load web:latest
 
 echo "Deploying to minikube"
 
-kubectl apply -f .\manifest\secret.yaml
-kubectl apply -f .\manifest\mysql.yaml
-kubectl apply -f .\manifest\web.yaml
+kubectl apply -f .\manifest\namespace.yaml
+kubectl apply -f .\manifest --recursive
